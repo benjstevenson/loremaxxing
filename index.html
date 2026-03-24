@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Loremaxxing</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --parchment: #f2e8d5;
+      --parchment-dark: #e0ceaf;
+      --ink: #1a1208;
+      --ink-faded: #3d2f1a;
+      --rust: #8b3a1a;
+      --gold: #9a7b3a;
+      --gold-light: #c9a84c;
+      --sea: #2a4a5e;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background-color: #1a1208;
+      font-family: 'IM Fell English', serif;
+      color: var(--ink);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Noise texture overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.4;
+    }
+
+    .page-wrapper {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    /* === BORDER FRAME === */
+    .frame {
+      background: var(--parchment);
+      border: 3px solid var(--gold);
+      box-shadow:
+        0 0 0 6px #1a1208,
+        0 0 0 9px var(--gold),
+        0 0 0 12px #1a1208,
+        0 0 60px rgba(154, 123, 58, 0.3),
+        inset 0 0 80px rgba(160, 120, 60, 0.15);
+      padding: 48px 52px 60px;
+      position: relative;
+      background-image:
+        radial-gradient(ellipse at 20% 10%, rgba(160,120,60,0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 90%, rgba(139,58,26,0.08) 0%, transparent 50%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='p'%3E%3CfeTurbulence baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)' opacity='0.04'/%3E%3C/svg%3E");
+    }
+
+    /* Corner ornaments */
+    .frame::before,
+    .frame::after,
+    .frame .corner-br,
+    .frame .corner-bl {
+      content: '✦';
+      position: absolute;
+      font-size: 22px;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .frame::before { top: 14px; left: 18px; }
+    .frame::after { top: 14px; right: 18px; }
+    .frame .corner-br { bottom: 14px; right: 18px; }
+    .frame .corner-bl { bottom: 14px; left: 18px; }
+
+    /* === HEADER === */
+    header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .site-eyebrow {
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      color: var(--rust);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      opacity: 0.85;
+    }
+
+    .site-title {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(32px, 7vw, 58px);
+      color: var(--ink);
+      line-height: 1.1;
+      letter-spacing: 0.02em;
+      text-shadow: 2px 2px 0px rgba(154,123,58,0.3);
+      margin-bottom: 6px;
+    }
+
+    .title-rule {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 16px 0;
+      color: var(--gold);
+    }
+    .title-rule span { flex: 1; height: 1px; background: linear-gradient(to right, transparent, var(--gold), transparent); }
+    .title-rule em { font-style: normal; font-size: 18px; }
+
+    .tagline {
+      font-family: 'IM Fell English', serif;
+      font-style: italic;
+      font-size: clamp(15px, 3vw, 20px);
+      color: var(--ink-faded);
+      line-height: 1.5;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    /* === COMPASS ROSE DIVIDER === */
+    .compass-divider {
+      text-align: center;
+      margin: 28px 0 24px;
+      color: var(--gold);
+      font-size: 24px;
+      letter-spacing: 8px;
+      opacity: 0.7;
+    }
+
+    /* === IMAGE BOX === */
+    .image-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 36px;
+    }
+
+    .image-box {
+      border: 2px solid var(--gold);
+      box-shadow:
+        3px 3px 0 var(--ink),
+        0 0 0 4px rgba(154,123,58,0.2),
+        0 8px 32px rgba(0,0,0,0.3);
+      overflow: hidden;
+      position: relative;
+      width: 260px;
+      height: 200px;
+      flex-shrink: 0;
+    }
+
+    .image-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: sepia(40%) contrast(1.1) brightness(0.95);
+    }
+
+    .image-caption {
+      text-align: center;
+      font-family: 'Cinzel', serif;
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-top: 10px;
+      opacity: 0.8;
+    }
+
+    /* === INTRO TEXT === */
+    .intro-text {
+      font-style: italic;
+      font-size: 15px;
+      color: var(--ink-faded);
+      text-align: center;
+      max-width: 540px;
+      margin: 0 auto 32px;
+      line-height: 1.7;
+    }
+
+    /* === SECTION HEADER === */
+    .section-header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .section-header h2 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(13px, 2.5vw, 16px);
+      letter-spacing: 0.35em;
+      color: var(--rust);
+      text-transform: uppercase;
+    }
+
+    /* === SIDEQUEST LIST === */
+    .sidequest-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .sidequest-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(154,123,58,0.25);
+      animation: fadeIn 0.4s ease both;
+    }
+
+    .sidequest-list li:last-child { border-bottom: none; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .quest-num {
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      color: var(--gold);
+      min-width: 28px;
+      padding-top: 2px;
+      letter-spacing: 0.05em;
+    }
+
+    .quest-content {}
+
+    .quest-title {
+      font-family: 'Cinzel', serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: 0.05em;
+      margin-bottom: 3px;
+    }
+
+    .quest-desc {
+      font-family: 'IM Fell English', serif;
+      font-style: italic;
+      font-size: 14px;
+      color: var(--ink-faded);
+      line-height: 1.55;
+    }
+
+    /* === FOOTER === */
+    footer {
+      margin-top: 48px;
+      text-align: center;
+    }
+
+    .footer-rule {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--gold);
+      margin-bottom: 24px;
+    }
+    .footer-rule span { flex: 1; height: 1px; background: linear-gradient(to right, transparent, var(--gold), transparent); }
+    .footer-rule em { font-style: normal; font-size: 16px; }
+
+    .contact-label {
+      font-family: 'Cinzel', serif;
+      font-size: 10px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--rust);
+      margin-bottom: 10px;
+      opacity: 0.85;
+    }
+
+    .contact-email {
+      font-family: 'Cinzel', serif;
+      font-size: 15px;
+      color: var(--ink);
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      border-bottom: 1px solid var(--gold);
+      padding-bottom: 2px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .contact-email:hover {
+      color: var(--rust);
+      border-color: var(--rust);
+    }
+
+    .footer-note {
+      font-style: italic;
+      font-size: 12px;
+      color: var(--gold);
+      margin-top: 18px;
+      opacity: 0.7;
+    }
+
+    /* Stagger animations */
+    .sidequest-list li:nth-child(1) { animation-delay: 0.05s; }
+    .sidequest-list li:nth-child(2) { animation-delay: 0.1s; }
+    .sidequest-list li:nth-child(3) { animation-delay: 0.15s; }
+    .sidequest-list li:nth-child(4) { animation-delay: 0.2s; }
+    .sidequest-list li:nth-child(5) { animation-delay: 0.25s; }
+    .sidequest-list li:nth-child(6) { animation-delay: 0.3s; }
+    .sidequest-list li:nth-child(7) { animation-delay: 0.35s; }
+    .sidequest-list li:nth-child(8) { animation-delay: 0.4s; }
+    .sidequest-list li:nth-child(9) { animation-delay: 0.45s; }
+    .sidequest-list li:nth-child(10) { animation-delay: 0.5s; }
+    .sidequest-list li:nth-child(11) { animation-delay: 0.55s; }
+    .sidequest-list li:nth-child(12) { animation-delay: 0.6s; }
+  </style>
+</head>
+<body>
+  <div class="page-wrapper">
+    <div class="frame">
+      <div class="corner-br">✦</div>
+      <div class="corner-bl">✦</div>
+
+      <header>
+        <h1 class="site-title">Loremaxxing</h1>
+        <div class="title-rule">
+          <span></span><em>⚓</em><span></span>
+        </div>
+        <p class="tagline">"Life is short. Create legendary lore before you die."</p>
+      </header>
+
+      <div class="compass-divider">— ✦ —</div>
+
+      <div class="image-container">
+        <div>
+          <div class="image-box">
+            <img
+              src="https://images.unsplash.com/photo-1516738901171-8eb4fc13bd20?w=520&q=80"
+              alt="Ancient nautical map"
+              onerror="this.style.background='#c9a84c22'; this.style.display='flex'; this.style.alignItems='center'; this.style.justifyContent='center';"
+            />
+          </div>
+          <p class="image-caption">Here Be Legends</p>
+        </div>
+      </div>
+
+      <p class="intro-text">
+        Most people leave this world without a single tale worth repeating.
+        The loremaxxer does not. Below lie twelve sacred sidequests.
+        Complete them. Then die interesting.
+      </p>
+
+      <div class="section-header">
+        <h2>⚔ The Sacred Sidequests ⚔</h2>
+      </div>
+
+      <ul class="sidequest-list">
+        <li>
+          <span class="quest-num">I.</span>
+          <div class="quest-content">
+            <div class="quest-title">Survive the Night in a Haunted Place</div>
+            <div class="quest-desc">Not a theme park. A real one. Alone. No cell service. Come back changed.</div>
+          </div>
+        </li>
+        <li>
+          <span class="quest-num">II.</span>
+          <div class="quest-content">
+            <div class="quest-title">Start a Cult (a Good One)</div>
+            <div class="quest-desc">Gather people around a strange, sincere belief. Hold a ceremony. Make them wear something.</div>
+          </div>
+        </li>
+        <li>
+          <span class="quest-num">III.</span>
+          <div class="quest-content">
+            <div class="quest-title">Get Lost in a Foreign Country on Purpose</div>
+            <div class="quest-desc">No map. No plan. Find shelter, food, and a story in 48 hours using only instinct and charm.</div>
+          </div>
+        </li>
+        <li>
+          <span class="quest-num">IV.</span>
+          <div class="quest-content">
+            <div class="quest-title">Duel Someone (Legally)</div>
+            <div class="quest-desc">Chess. Arm wrestling. Formal debate. A cooking contest at high noon. The gauntlet must be thrown.</div>
+          </div>
+        </li>
+        <li>
+          <span class="quest-num">V.</span>
+          <div class="quest-content">
+            <div class="quest-title">Leave an Anonymous Legend in Your City</div>
+            <div class="quest-desc">A mural. A plaque. A buried time capsule. Something people will wonder about for decades.</div>
+          </div>
+        </li>
+        <li>
+          <span class="quest-num">VI.</span>
+          <div class="quest-content">
+            <div class="quest-title">Train With a True Master</div>
+            <div class="quest-desc">Find the best in the world at something obscure — falconry, swordplay, foraging — and apprentice under them.</div>
+          </div>
+        </li>
+        <li>
+          <span class="quest-num">VII.</span>
+          <div class="quest-content">
+            <div class="quest-title">Give Something Away That Hurts to Lose</div>
+            <div class="quest-desc">Not money. Something irreplaceable. To a stranger. No tax receipt. No documentation. Just the act.</div>
+          </div>
+        </li>
+        <li>
+          <span class="quest-num">VIII.</span>
+          <div class="quest-content">
+            <div class="quest-title">Survive 30 Days Without the Algorithm</div>
+            <div class="quest-desc">No social media. No streaming. No feeds of any kind. Read, walk, and remember how your mind felt before.</div>
+          </div>
+        </li>
+        <li>
+          <span class="quest-num">IX.</span>
+          <div class="quest-content">
+            <div class="quest-title">Perform in Front of 100 Strangers</div>
+            <div class="quest-desc">Stand-up, spoken word, a magic trick, a terrible song. The medium doesn't matter. The fear does.</div>
+          </div>
+        </li>
+        <li>
+          <span class="quest-num">X.</span>
+          <div class="quest-content">
+            <div class="quest-title">Build Something With Your Hands That Outlasts You</div>
+            <div class="quest-desc">A piece of furniture. A wall. A boat. Something you made from raw material that will exist when you don't.</div>
+          </div>
+        </li>
+        <li>
+          <span class="quest-num">XI.</span>
+          <div class="quest-content">
+            <div class="quest-title">Cross a Border on Foot</div>
+            <div class="quest-desc">Legally. But slowly. Feel every step of the threshold. Let the geography of the world become real in your body.</div>
+          </div>
+        </li>
+        <li>
+          <span class="quest-num">XII.</span>
+          <div class="quest-content">
+            <div class="quest-title">Tell Someone the Whole Truth</div>
+            <div class="quest-desc">The thing you've never said out loud. To the person who most needs to hear it. No context. No softening. Just the truth.</div>
+          </div>
+        </li>
+      </ul>
+
+      <footer>
+        <div class="footer-rule">
+          <span></span><em>⚓</em><span></span>
+        </div>
+        <a class="contact-email" href="mailto:bsteven731@gmail.com">bsteven731@gmail.com</a>
+      </footer>
+
+    </div>
+  </div>
+</body>
+</html>
